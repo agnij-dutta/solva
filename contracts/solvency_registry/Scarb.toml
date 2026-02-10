@@ -1,0 +1,10 @@
+[package]
+name = "solvency_registry"
+version = "0.1.0"
+edition = "2024_07"
+
+[dependencies]
+starknet = ">=2.11.0"
+solvency_verifier = { path = "../solvency_verifier" }
+
+[[target.starknet-contract]]

@@ -1,0 +1,39 @@
+# Node
+node_modules/
+dist/
+*.tsbuildinfo
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+
+# Noir / Barretenberg
+circuits/*/target/
+proof
+vk
+witness*
+
+# Cairo / Scarb
+contracts/*/target/
+
+# Environment
+.env
+.env.*
+
+# Generated data
+offchain/data/reserve_data.json
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# Proof artifacts
+*.proof
+calldata.json

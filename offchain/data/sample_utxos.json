@@ -1,0 +1,35 @@
+{
+  "addresses": [
+    "tb1qw508d6qejxtdg4y5r3zarvary0c5xw7kxpjzsx",
+    "tb1qrp33g0q5b5698ahp5jnf5yzjmgces69hsd8vqy"
+  ],
+  "utxos": {
+    "tb1qw508d6qejxtdg4y5r3zarvary0c5xw7kxpjzsx": [
+      {
+        "txid": "a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2",
+        "vout": 0,
+        "value": 5000000,
+        "confirmed": true,
+        "block_height": 2500000
+      },
+      {
+        "txid": "b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3",
+        "vout": 1,
+        "value": 3000000,
+        "confirmed": true,
+        "block_height": 2500001
+      }
+    ],
+    "tb1qrp33g0q5b5698ahp5jnf5yzjmgces69hsd8vqy": [
+      {
+        "txid": "c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4",
+        "vout": 0,
+        "value": 2000000,
+        "confirmed": true,
+        "block_height": 2500002
+      }
+    ]
+  },
+  "total_sats": 10000000,
+  "fetched_at": "2025-01-01T00:00:00Z"
+}

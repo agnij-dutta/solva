@@ -1,0 +1,21 @@
+{
+  "name": "solva-tree-builder",
+  "version": "1.0.0",
+  "description": "Pedersen Merkle tree builder for Solva solvency proofs",
+  "type": "module",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node --loader ts-node/esm src/index.ts",
+    "dev": "tsx src/index.ts"
+  },
+  "dependencies": {
+    "@aztec/bb.js": "^0.63.0",
+    "toml": "^3.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.5.0",
+    "tsx": "^4.0.0",
+    "@types/node": "^20.0.0"
+  }
+}
