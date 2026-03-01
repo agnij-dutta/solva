@@ -1,0 +1,518 @@
+{
+  "microInteractions": {
+    "ProofGenerationStates": {
+      "description": "Micro-interactions for proof generation lifecycle",
+      "states": {
+        "idle": {
+          "button": {
+            "backgroundColor": "primary.600",
+            "color": "text.inverse",
+            "border": "none",
+            "cursor": "pointer",
+            "icon": "play"
+          },
+          "message": "Ready to generate proof",
+          "animation": "none"
+        },
+        "fetching": {
+          "progressBar": {
+            "width": "15%",
+            "backgroundColor": "primary.500"
+          },
+          "icon": {
+            "name": "download",
+            "animation": "bounce 1s infinite"
+          },
+          "indicator": {
+            "borderColor": "primary.500",
+            "backgroundColor": "primary.50"
+          },
+          "message": "Fetching Bitcoin UTXOs from testnet...",
+          "subtext": "Querying blockchain explorers"
+        },
+        "building": {
+          "progressBar": {
+            "width": "30%",
+            "backgroundColor": "primary.600"
+          },
+          "icon": {
+            "name": "git-merge",
+            "animation": "spin 2s linear infinite"
+          },
+          "indicator": {
+            "borderColor": "primary.600",
+            "backgroundColor": "primary.100"
+          },
+          "message": "Building Merkle tree structure",
+          "subtext": "Computing Pedersen hash commitments"
+        },
+        "proving": {
+          "progressBar": {
+            "width": "65%",
+            "background": "linear-gradient(90deg, primary.500, bitcoin.500)",
+            "animation": "shimmer 2s infinite"
+          },
+          "icon": {
+            "name": "shield",
+            "animation": "pulse 1.5s ease-in-out infinite",
+            "color": "bitcoin.500"
+          },
+          "indicator": {
+            "borderColor": "bitcoin.500",
+            "backgroundColor": "bitcoin.50",
+            "boxShadow": "0 0 20px rgba(249, 115, 22, 0.3)"
+          },
+          "message": "Generating zero-knowledge proof",
+          "subtext": "UltraKeccakHonk on BN254 (this takes ~25s)",
+          "timer": true,
+          "particles": {
+            "enabled": true,
+            "color": "bitcoin.500",
+            "count": 20
+          }
+        },
+        "submitting": {
+          "progressBar": {
+            "width": "85%",
+            "backgroundColor": "primary.500"
+          },
+          "icon": {
+            "name": "upload",
+            "animation": "slideUp 0.5s ease-in-out infinite alternate"
+          },
+          "indicator": {
+            "borderColor": "primary.500",
+            "backgroundColor": "primary.50"
+          },
+          "message": "Submitting proof to Starknet",
+          "subtext": "Calling registry contract"
+        },
+        "verifying": {
+          "progressBar": {
+            "width": "95%",
+            "backgroundColor": "success.500"
+          },
+          "icon": {
+            "name": "check-circle",
+            "animation": "scale 0.3s ease-out"
+          },
+          "indicator": {
+            "borderColor": "success.500",
+            "backgroundColor": "success.50"
+          },
+          "message": "Verifying on-chain",
+          "subtext": "Garaga verifier processing..."
+        },
+        "complete": {
+          "progressBar": {
+            "width": "100%",
+            "backgroundColor": "success.500"
+          },
+          "icon": {
+            "name": "check-circle",
+            "animation": "checkmark 0.5s ease-out",
+            "color": "success.600"
+          },
+          "indicator": {
+            "borderColor": "success.500",
+            "backgroundColor": "success.50",
+            "boxShadow": "0 0 20px rgba(34, 197, 94, 0.3)"
+          },
+          "message": "Proof verified successfully!",
+          "subtext": "Solvency status updated",
+          "confetti": true,
+          "badge": {
+            "show": true,
+            "text": "VERIFIED",
+            "color": "success.600"
+          }
+        },
+        "error": {
+          "progressBar": {
+            "backgroundColor": "danger.500"
+          },
+          "icon": {
+            "name": "alert-circle",
+            "animation": "shake 0.5s ease-in-out",
+            "color": "danger.600"
+          },
+          "indicator": {
+            "borderColor": "danger.500",
+            "backgroundColor": "danger.50"
+          },
+          "message": "Proof generation failed",
+          "subtext": "Click to retry",
+          "retryButton": {
+            "show": true,
+            "backgroundColor": "danger.600"
+          }
+        }
+      },
+      "animations": {
+        "checkmark": {
+          "keyframes": [
+            { "offset": 0, "transform": "scale(0) rotate(0deg)", "opacity": 0 },
+            { "offset": 0.5, "transform": "scale(1.2) rotate(180deg)", "opacity": 1 },
+            { "offset": 1, "transform": "scale(1) rotate(360deg)", "opacity": 1 }
+          ],
+          "duration": "500ms",
+          "easing": "cubic-bezier(0.34, 1.56, 0.64, 1)"
+        },
+        "shake": {
+          "keyframes": [
+            { "offset": 0, "transform": "translateX(0)" },
+            { "offset": 0.25, "transform": "translateX(-10px)" },
+            { "offset": 0.5, "transform": "translateX(10px)" },
+            { "offset": 0.75, "transform": "translateX(-10px)" },
+            { "offset": 1, "transform": "translateX(0)" }
+          ],
+          "duration": "500ms"
+        },
+        "shimmer": {
+          "keyframes": [
+            { "offset": 0, "backgroundPosition": "-100% 0" },
+            { "offset": 1, "backgroundPosition": "200% 0" }
+          ],
+          "duration": "2s",
+          "iterationCount": "infinite"
+        },
+        "slideUp": {
+          "keyframes": [
+            { "offset": 0, "transform": "translateY(0)" },
+            { "offset": 1, "transform": "translateY(-5px)" }
+          ],
+          "duration": "500ms",
+          "direction": "alternate",
+          "iterationCount": "infinite"
+        }
+      }
+    },
+
+    "AddressInteractions": {
+      "description": "Bitcoin address management interactions",
+      "copyToClipboard": {
+        "default": {
+          "icon": "copy",
+          "color": "neutral.600",
+          "tooltip": "Copy address"
+        },
+        "hover": {
+          "backgroundColor": "neutral.100",
+          "transform": "scale(1.1)",
+          "transition": "150ms"
+        },
+        "active": {
+          "transform": "scale(0.95)"
+        },
+        "copied": {
+          "icon": "check",
+          "color": "success.600",
+          "tooltip": "Copied!",
+          "animation": "fadeIn 200ms"
+        }
+      },
+      "explorerLink": {
+        "default": {
+          "icon": "external-link",
+          "color": "primary.600"
+        },
+        "hover": {
+          "color": "primary.700",
+          "textDecoration": "underline",
+          "icon": {
+            "transform": "translateX(2px) translateY(-2px)"
+          }
+        }
+      },
+      "refresh": {
+        "default": {
+          "icon": "refresh-cw",
+          "color": "neutral.600"
+        },
+        "loading": {
+          "icon": "loader",
+          "animation": "spin 1s linear infinite",
+          "color": "primary.600"
+        },
+        "success": {
+          "icon": "check",
+          "color": "success.600",
+          "animation": "scale 300ms"
+        }
+      }
+    },
+
+    "SolvencyCardInteractions": {
+      "description": "Solvency status card hover and active states",
+      "default": {
+        "transform": "translateY(0)",
+        "shadow": "shadows.md",
+        "transition": "all 300ms cubic-bezier(0.4, 0, 0.2, 1)"
+      },
+      "hover": {
+        "transform": "translateY(-4px)",
+        "shadow": "shadows.xl",
+        "borderWidth": "3px",
+        "cursor": "pointer"
+      },
+      "active": {
+        "transform": "translateY(-2px)",
+        "shadow": "shadows.lg"
+      },
+      "pulse": {
+        "animation": {
+          "keyframes": [
+            { "offset": 0, "transform": "scale(1)", "opacity": 1 },
+            { "offset": 0.5, "transform": "scale(1.02)", "opacity": 0.9 },
+            { "offset": 1, "transform": "scale(1)", "opacity": 1 }
+          ],
+          "duration": "2s",
+          "iterationCount": "infinite",
+          "easing": "ease-in-out"
+        }
+      }
+    },
+
+    "LiveFeedUpdates": {
+      "description": "Real-time proof feed update animations",
+      "newEntry": {
+        "animation": "slideInRight 400ms cubic-bezier(0.34, 1.56, 0.64, 1)",
+        "highlight": {
+          "backgroundColor": "primary.50",
+          "border": "2px solid",
+          "borderColor": "primary.400"
+        },
+        "fadeToNormal": {
+          "delay": "2s",
+          "duration": "1s",
+          "easing": "ease-out"
+        }
+      },
+      "statusChange": {
+        "pending": {
+          "icon": "clock",
+          "color": "warning.500",
+          "animation": "pulse 2s infinite"
+        },
+        "confirmed": {
+          "icon": "check-circle",
+          "color": "success.500",
+          "animation": "checkmark 500ms"
+        },
+        "failed": {
+          "icon": "x-circle",
+          "color": "danger.500",
+          "animation": "shake 500ms"
+        }
+      },
+      "autoScroll": {
+        "behavior": "smooth",
+        "duration": "300ms"
+      }
+    },
+
+    "ChartInteractions": {
+      "description": "Data visualization interactions",
+      "tooltip": {
+        "show": {
+          "animation": "fadeIn 150ms",
+          "backgroundColor": "neutral.900",
+          "color": "text.inverse",
+          "padding": "spacing.3",
+          "borderRadius": "borderRadius.md",
+          "fontSize": "fontSize.sm",
+          "boxShadow": "shadows.lg"
+        },
+        "hide": {
+          "animation": "fadeOut 100ms"
+        }
+      },
+      "dataPoint": {
+        "hover": {
+          "scale": 1.2,
+          "cursor": "pointer",
+          "glow": {
+            "enabled": true,
+            "color": "primary.500",
+            "blur": "10px"
+          }
+        }
+      },
+      "legend": {
+        "hover": {
+          "fontWeight": "fontWeight.semibold",
+          "opacity": 1,
+          "relatedData": {
+            "opacity": 1
+          },
+          "otherData": {
+            "opacity": 0.3
+          }
+        }
+      }
+    },
+
+    "ButtonStates": {
+      "description": "Button interaction states",
+      "primary": {
+        "default": {
+          "backgroundColor": "primary.600",
+          "color": "text.inverse",
+          "border": "none",
+          "cursor": "pointer",
+          "transition": "all 200ms"
+        },
+        "hover": {
+          "backgroundColor": "primary.700",
+          "transform": "translateY(-1px)",
+          "boxShadow": "shadows.md"
+        },
+        "active": {
+          "backgroundColor": "primary.800",
+          "transform": "translateY(0)",
+          "boxShadow": "shadows.sm"
+        },
+        "loading": {
+          "cursor": "not-allowed",
+          "opacity": 0.7,
+          "icon": "loader",
+          "iconAnimation": "spin 1s linear infinite"
+        },
+        "disabled": {
+          "backgroundColor": "neutral.300",
+          "cursor": "not-allowed",
+          "opacity": 0.5
+        }
+      },
+      "secondary": {
+        "default": {
+          "backgroundColor": "backgrounds.primary",
+          "color": "text.primary",
+          "border": "1px solid",
+          "borderColor": "borders.default"
+        },
+        "hover": {
+          "backgroundColor": "backgrounds.secondary",
+          "borderColor": "borders.strong"
+        }
+      },
+      "danger": {
+        "default": {
+          "backgroundColor": "danger.600",
+          "color": "text.inverse"
+        },
+        "hover": {
+          "backgroundColor": "danger.700",
+          "boxShadow": "0 0 15px rgba(239, 68, 68, 0.3)"
+        }
+      }
+    },
+
+    "LoadingStates": {
+      "description": "Loading indicators and skeleton screens",
+      "skeleton": {
+        "backgroundColor": "neutral.200",
+        "animation": {
+          "name": "pulse",
+          "duration": "1.5s",
+          "iterationCount": "infinite"
+        },
+        "overlay": {
+          "animation": "shimmer 2s infinite",
+          "background": "linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent)"
+        }
+      },
+      "spinner": {
+        "borderColor": "neutral.200",
+        "borderTopColor": "primary.600",
+        "animation": "spin 1s linear infinite",
+        "size": {
+          "sm": "16px",
+          "md": "24px",
+          "lg": "32px"
+        }
+      },
+      "dots": {
+        "animation": "bounce",
+        "color": "primary.600",
+        "duration": "1.4s",
+        "delay": {
+          "dot1": "0s",
+          "dot2": "0.2s",
+          "dot3": "0.4s"
+        }
+      }
+    },
+
+    "ToastNotifications": {
+      "description": "Toast notification animations",
+      "enter": {
+        "animation": "slideInRight 300ms cubic-bezier(0.34, 1.56, 0.64, 1)"
+      },
+      "exit": {
+        "animation": "slideOutRight 200ms ease-in"
+      },
+      "variants": {
+        "success": {
+          "backgroundColor": "success.50",
+          "borderColor": "success.500",
+          "iconColor": "success.600",
+          "icon": "check-circle"
+        },
+        "error": {
+          "backgroundColor": "danger.50",
+          "borderColor": "danger.500",
+          "iconColor": "danger.600",
+          "icon": "alert-circle"
+        },
+        "warning": {
+          "backgroundColor": "warning.50",
+          "borderColor": "warning.500",
+          "iconColor": "warning.600",
+          "icon": "alert-triangle"
+        },
+        "info": {
+          "backgroundColor": "primary.50",
+          "borderColor": "primary.500",
+          "iconColor": "primary.600",
+          "icon": "info"
+        }
+      }
+    },
+
+    "TransitionEffects": {
+      "description": "Page and component transitions",
+      "fadeIn": {
+        "keyframes": [
+          { "offset": 0, "opacity": 0 },
+          { "offset": 1, "opacity": 1 }
+        ],
+        "duration": "300ms",
+        "easing": "ease-out"
+      },
+      "slideInRight": {
+        "keyframes": [
+          { "offset": 0, "transform": "translateX(100%)", "opacity": 0 },
+          { "offset": 1, "transform": "translateX(0)", "opacity": 1 }
+        ],
+        "duration": "400ms",
+        "easing": "cubic-bezier(0.34, 1.56, 0.64, 1)"
+      },
+      "scale": {
+        "keyframes": [
+          { "offset": 0, "transform": "scale(0.95)", "opacity": 0 },
+          { "offset": 1, "transform": "scale(1)", "opacity": 1 }
+        ],
+        "duration": "200ms",
+        "easing": "ease-out"
+      }
+    }
+  },
+
+  "keyframeDefinitions": {
+    "spin": "@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }",
+    "pulse": "@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }",
+    "bounce": "@keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }",
+    "shimmer": "@keyframes shimmer { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }"
+  }
+}

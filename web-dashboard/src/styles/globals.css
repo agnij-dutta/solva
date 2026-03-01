@@ -1,0 +1,278 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Import ZK Theme */
+@import './zk-theme.css';
+
+/* Global styles for Solva Dashboard - ZK Infrastructure Protocol Grade */
+
+@layer base {
+  * {
+    @apply border-neutral-800;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply text-white antialiased;
+    background-color: #0A0E27;
+    background-image:
+      linear-gradient(rgba(0, 245, 255, 0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0, 245, 255, 0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    background-position: -1px -1px;
+    font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+    overflow-x: hidden;
+  }
+
+  /* Enhanced font rendering */
+  body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+}
+
+@layer utilities {
+  /* Gradient Text Effects */
+  .text-gradient {
+    @apply bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 bg-clip-text text-transparent;
+    background-size: 200% auto;
+    animation: gradient-shift 3s ease infinite;
+  }
+
+  .text-gradient-cyber {
+    background: linear-gradient(135deg, #00F5FF 0%, #B794F6 50%, #FF1CF7 100%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-size: 200% auto;
+    animation: gradient-shift 3s ease infinite;
+  }
+
+  /* Glow Effects */
+  .shadow-glow-primary {
+    box-shadow: 0 0 20px rgba(0, 245, 255, 0.3), 0 0 40px rgba(0, 245, 255, 0.1);
+  }
+
+  .shadow-glow-success {
+    box-shadow: 0 0 20px rgba(0, 255, 136, 0.3), 0 0 40px rgba(0, 255, 136, 0.1);
+  }
+
+  .shadow-glow-bitcoin {
+    box-shadow: 0 0 20px rgba(249, 115, 22, 0.3), 0 0 40px rgba(249, 115, 22, 0.1);
+  }
+
+  .shadow-glow-purple {
+    box-shadow: 0 0 20px rgba(183, 148, 246, 0.3), 0 0 40px rgba(183, 148, 246, 0.1);
+  }
+
+  .shadow-glow-pink {
+    box-shadow: 0 0 20px rgba(255, 28, 247, 0.3), 0 0 40px rgba(255, 28, 247, 0.1);
+  }
+
+  /* Glass Morphism */
+  .glass-card {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .glass-card-strong {
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+  }
+
+  /* Animated Borders */
+  .border-gradient {
+    border: 2px solid transparent;
+    background-origin: border-box;
+    background-clip: padding-box, border-box;
+  }
+
+  .border-gradient-cyan {
+    background-image: linear-gradient(#0F1433, #0F1433),
+      linear-gradient(135deg, #00F5FF, #B794F6);
+  }
+
+  .border-gradient-animated {
+    position: relative;
+    background: #0F1433;
+  }
+
+  .border-gradient-animated::before {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    background: linear-gradient(45deg, #00F5FF, #B794F6, #FF1CF7, #00FF88);
+    background-size: 200% 200%;
+    border-radius: inherit;
+    z-index: -1;
+    animation: border-flow 4s linear infinite;
+  }
+
+  /* Text Glow Effects */
+  .text-glow-cyan {
+    color: #00F5FF;
+    text-shadow: 0 0 10px rgba(0, 245, 255, 0.5), 0 0 20px rgba(0, 245, 255, 0.3);
+  }
+
+  .text-glow-purple {
+    color: #B794F6;
+    text-shadow: 0 0 10px rgba(183, 148, 246, 0.5), 0 0 20px rgba(183, 148, 246, 0.3);
+  }
+
+  .text-glow-green {
+    color: #00FF88;
+    text-shadow: 0 0 10px rgba(0, 255, 136, 0.5), 0 0 20px rgba(0, 255, 136, 0.3);
+  }
+
+  /* Cyber Grid Background */
+  .cyber-grid {
+    background-color: #0A0E27;
+    background-image:
+      linear-gradient(rgba(0, 245, 255, 0.1) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0, 245, 255, 0.1) 1px, transparent 1px);
+    background-size: 40px 40px;
+    background-position: -1px -1px;
+  }
+
+  .cyber-grid-animated {
+    background-color: #0A0E27;
+    background-image:
+      linear-gradient(rgba(0, 245, 255, 0.1) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0, 245, 255, 0.1) 1px, transparent 1px);
+    background-size: 40px 40px;
+    animation: grid-flow 20s linear infinite;
+  }
+
+  /* Hover Lift Effect */
+  .hover-lift {
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease;
+  }
+
+  .hover-lift:hover {
+    transform: translateY(-4px);
+  }
+
+  /* Pulse Animation */
+  .pulse-glow {
+    animation: pulse-glow 2s ease-in-out infinite;
+  }
+
+  /* Floating Animation */
+  .float {
+    animation: float 6s ease-in-out infinite;
+  }
+
+  /* Shimmer Effect */
+  .shimmer {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .shimmer::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    animation: shimmer-slide 2s infinite;
+  }
+}
+
+/* Keyframe Animations */
+@keyframes gradient-shift {
+  0%, 100% {
+    background-position: 0% center;
+  }
+  50% {
+    background-position: 100% center;
+  }
+}
+
+@keyframes border-flow {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+@keyframes grid-flow {
+  0% {
+    background-position: -1px -1px;
+  }
+  100% {
+    background-position: 39px 39px;
+  }
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+@keyframes shimmer-slide {
+  0% {
+    left: -100%;
+  }
+  100% {
+    left: 100%;
+  }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0F1433;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #00F5FF, #B794F6);
+  border-radius: 10px;
+  border: 2px solid #0F1433;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #B794F6, #FF1CF7);
+  box-shadow: 0 0 10px rgba(183, 148, 246, 0.5);
+}
+
+/* Selection Styling */
+::selection {
+  background: rgba(0, 245, 255, 0.3);
+  color: white;
+}
+
+::-moz-selection {
+  background: rgba(0, 245, 255, 0.3);
+  color: white;
+}

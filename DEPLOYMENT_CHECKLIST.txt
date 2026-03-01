@@ -1,0 +1,206 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                    SOLVA PROTOCOL DEPLOYMENT CHECKLIST                        ║
+║                         Starknet Sepolia Testnet                              ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  PRE-DEPLOYMENT SETUP (COMPLETED ✓)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+[✓] Scarb v2.8.5 installed
+[✓] Starknet Foundry v0.56.0 installed  
+[✓] Cairo v2.8.5 compiler configured
+[✓] All contract dependencies resolved
+[✓] Deployment account created
+[✓] Configuration files prepared
+[✓] Deployment scripts ready
+[✓] Documentation complete
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  CONTRACTS BUILD STATUS (COMPLETED ✓)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+[✓] SolvencyVerifier     - Built (28KB)
+[✓] SolvencyRegistry     - Built (with lib target)
+[✓] SolvaToken           - Built (ERC20)
+[✓] LendingProtocol      - Built (with dependencies)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  DEPLOYMENT ACCOUNT
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Account Name:    solva-deployer
+Network:         Starknet Sepolia Testnet
+
+Address:         0x036f21aff52fb88cc777f0bc9151917c5196d17c8ac1ccb52da5087c35e8c635
+
+Explorer:        https://sepolia.starkscan.co/contract/
+                 0x036f21aff52fb88cc777f0bc9151917c5196d17c8ac1ccb52da5087c35e8c635
+
+Status:          Created (waiting for funding)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  ACTION REQUIRED: FUND & DEPLOY ACCOUNT
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+[ ] Step 1: Get STRK tokens from faucet
+    
+    Faucet URL:  https://starknet-faucet.vercel.app/
+    
+    Your Address: 0x036f21aff52fb88cc777f0bc9151917c5196d17c8ac1ccb52da5087c35e8c635
+    
+    Amount:      0.1 STRK (recommended)
+    
+    Wait time:   1-2 minutes for confirmation
+
+
+[ ] Step 2: Deploy your account
+    
+    Command:     export PATH="$HOME/.local/bin:$PATH"
+                 sncast account deploy --name solva-deployer --network sepolia
+    
+    Expected:    Transaction hash + confirmation
+    Cost:        ~0.008-0.010 STRK
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  CONTRACT DEPLOYMENT SEQUENCE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+[ ] Step 3: Deploy all contracts
+    
+    Command:     cd /Users/agnijdutta/Desktop/solva
+                 ./scripts/deploy_sepolia.sh
+    
+    Order:       1. SolvencyVerifier (no dependencies)
+                 2. SolvaToken (no dependencies)
+                 3. SolvencyRegistry (→ needs Verifier)
+                 4. LendingProtocol (→ needs Registry)
+    
+    Duration:    3-5 minutes
+    Cost:        ~0.035-0.065 STRK
+    Output:      deployments.json with all addresses
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  POST-DEPLOYMENT VERIFICATION
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+[ ] Step 4: Test deployment
+    
+    Command:     ./scripts/test_deployment.sh
+    
+    Tests:       ✓ Token supply reading
+                 ✓ Registry configuration
+                 ✓ Verifier address check
+                 ✓ Mock proof submission
+                 ✓ Solvency status query
+                 ✓ Lending protocol LTV check
+
+[ ] Step 5: Verify on explorer
+    
+    Check:       All 4 contracts visible on Starkscan
+                 Transaction hashes confirmed
+                 Constructor parameters correct
+
+[ ] Step 6: Save deployment info
+    
+    File:        deployments.json (auto-generated)
+    Contains:    - Contract addresses
+                 - Class hashes
+                 - Explorer URLs
+                 - Deployment timestamp
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  FRONTEND INTEGRATION
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+[ ] Step 7: Import contract addresses
+    
+    From:        deployments.json
+    To:          Frontend configuration
+    Guide:       FRONTEND_INTEGRATION.md
+
+[ ] Step 8: Set up Starknet.js
+    
+    Install:     npm install starknet
+    Configure:   Provider, Contract instances
+    Test:        Read operations first
+
+[ ] Step 9: Test user flows
+    
+    Test:        - Check solvency status
+                 - Token balance queries
+                 - Submit test proof
+                 - Lending operations
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  ESTIMATED COSTS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Account Deployment:          0.008 - 0.010 STRK
+Contract Declarations (×4):  0.015 - 0.025 STRK
+Contract Deployments (×4):   0.020 - 0.040 STRK
+Buffer for retries:          0.010 - 0.025 STRK
+                            ────────────────────
+TOTAL:                       0.053 - 0.100 STRK
+
+Recommended funding:         0.1 STRK
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  DOCUMENTATION & SCRIPTS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Documentation:
+  QUICK_START.md              - TL;DR deployment guide
+  DEPLOYMENT_SUMMARY.md       - Complete overview
+  DEPLOYMENT_GUIDE.md         - Step-by-step instructions
+  DEPLOYMENT_STATUS.md        - Current status
+  FRONTEND_INTEGRATION.md     - Frontend code examples
+
+Scripts:
+  scripts/deploy_sepolia.sh   - Main deployment script
+  scripts/test_deployment.sh  - Post-deployment tests
+  scripts/deploy.sh           - Original deployment script
+
+Configuration:
+  snfoundry.toml              - Starknet Foundry config
+  contracts/*/Scarb.toml      - Contract configurations
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  QUICK REFERENCE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Check account:    sncast account list
+Check balance:    sncast account balance --name solva-deployer --network sepolia
+Deploy account:   sncast account deploy --name solva-deployer --network sepolia
+Deploy contracts: ./scripts/deploy_sepolia.sh
+Test contracts:   ./scripts/test_deployment.sh
+View addresses:   cat deployments.json
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  NEXT STEPS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. Visit faucet and fund account
+2. Deploy account with sncast
+3. Run deployment script
+4. Test deployed contracts
+5. Integrate with frontend
+
+Expected total time: 10-15 minutes
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  SUPPORT
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Starknet Docs:        https://docs.starknet.io/
+Starknet Foundry:     https://foundry-rs.github.io/starknet-foundry/
+Sepolia Explorer:     https://sepolia.starkscan.co/
+Faucet:               https://starknet-faucet.vercel.app/
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Current Status: READY FOR DEPLOYMENT - Waiting for account funding
+
+Last Updated: 2026-02-14
+
+╚══════════════════════════════════════════════════════════════════════════════╝

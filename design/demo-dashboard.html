@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Solva Transparency Dashboard - Demo</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* Additional demo-specific styles */
+    body {
+      margin: 0;
+      padding: 0;
+    }
+
+    .dashboard {
+      max-width: 1536px;
+      margin: 0 auto;
+      padding: var(--spacing-8);
+    }
+
+    .dashboard-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--spacing-6);
+      background-color: white;
+      border-bottom: 1px solid var(--color-neutral-200);
+      margin-bottom: var(--spacing-8);
+    }
+
+    .logo-section {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-3);
+    }
+
+    .logo-icon {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, var(--color-primary-600), var(--color-bitcoin-500));
+      border-radius: var(--radius-lg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: var(--font-weight-bold);
+      font-size: var(--font-size-xl);
+    }
+
+    .logo-text h1 {
+      font-size: var(--font-size-2xl);
+      font-weight: var(--font-weight-bold);
+      background: linear-gradient(135deg, var(--color-primary-600), var(--color-bitcoin-500));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin: 0;
+    }
+
+    .logo-text p {
+      font-size: var(--font-size-xs);
+      color: var(--color-neutral-500);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin: 0;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: var(--spacing-3);
+      align-items: center;
+    }
+
+    .network-indicator {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-2);
+      padding: var(--spacing-2) var(--spacing-3);
+      background-color: var(--color-success-50);
+      border: 1px solid var(--color-success-300);
+      border-radius: var(--radius-full);
+      font-size: var(--font-size-sm);
+      font-weight: var(--font-weight-medium);
+    }
+
+    .network-dot {
+      width: 8px;
+      height: 8px;
+      background-color: var(--color-success-500);
+      border-radius: 50%;
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: var(--spacing-6);
+    }
+
+    .grid-item-4 {
+      grid-column: span 4;
+    }
+
+    .grid-item-6 {
+      grid-column: span 6;
+    }
+
+    .grid-item-8 {
+      grid-column: span 8;
+    }
+
+    .grid-item-12 {
+      grid-column: span 12;
+    }
+
+    .section-header {
+      margin-bottom: var(--spacing-4);
+    }
+
+    .section-title {
+      font-size: var(--font-size-xl);
+      font-weight: var(--font-weight-semibold);
+      color: var(--color-neutral-900);
+      margin-bottom: var(--spacing-2);
+    }
+
+    .section-subtitle {
+      font-size: var(--font-size-sm);
+      color: var(--color-neutral-600);
+    }
+
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--spacing-4);
+      margin-bottom: var(--spacing-6);
+    }
+
+    .metric-card {
+      background-color: white;
+      padding: var(--spacing-6);
+      border-radius: var(--radius-xl);
+      border: 1px solid var(--color-neutral-200);
+      text-align: center;
+    }
+
+    @media (max-width: 1023px) {
+      .dashboard-grid {
+        grid-template-columns: repeat(6, 1fr);
+      }
+
+      .grid-item-4,
+      .grid-item-6,
+      .grid-item-8 {
+        grid-column: span 6;
+      }
+
+      .metrics-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 767px) {
+      .dashboard {
+        padding: var(--spacing-4);
+      }
+
+      .dashboard-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .grid-item-4,
+      .grid-item-6,
+      .grid-item-8,
+      .grid-item-12 {
+        grid-column: span 1;
+      }
+
+      .metrics-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .dashboard-header {
+        flex-direction: column;
+        gap: var(--spacing-4);
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Dashboard Header -->
+  <header class="dashboard-header">
+    <div class="logo-section">
+      <div class="logo-icon">S</div>
+      <div class="logo-text">
+        <h1>Solva</h1>
+        <p>Transparency Dashboard</p>
+      </div>
+    </div>
+
+    <div class="header-actions">
+      <div class="network-indicator">
+        <span class="network-dot"></span>
+        Starknet Sepolia
+      </div>
+
+      <div class="trust-badge trust-badge--live">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+        </svg>
+        Live Data
+      </div>
+
+      <button class="btn btn--primary">
+        Generate Proof
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Dashboard -->
+  <main class="dashboard">
+    <!-- Key Metrics Row -->
+    <div class="metrics-grid">
+      <div class="metric-card">
+        <div class="metric-display">
+          <div class="metric-display__value">150.5%</div>
+          <div class="metric-display__label">Reserve Ratio</div>
+        </div>
+      </div>
+
+      <div class="metric-card">
+        <div class="metric-display">
+          <div class="metric-display__value">10.5000</div>
+          <div class="metric-display__label">Total Reserves (BTC)</div>
+        </div>
+      </div>
+
+      <div class="metric-card">
+        <div class="metric-display">
+          <div class="metric-display__value">2 min</div>
+          <div class="metric-display__label">Last Proof Age</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Dashboard Grid -->
+    <div class="dashboard-grid">
+      <!-- Solvency Status Card -->
+      <div class="grid-item-4">
+        <div class="solvency-card solvency-card--tier-a">
+          <div class="solvency-card__header">
+            <div class="solvency-card__badge">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="verified-icon">
+                <path d="M9 12l2 2 4-4"></path>
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+              </svg>
+              TIER A - PREMIUM
+            </div>
+            <div class="trust-badge trust-badge--verified">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M9 12l2 2 4-4"></path>
+                <circle cx="12" cy="12" r="10"></circle>
+              </svg>
+              Verified
+            </div>
+          </div>
+
+          <div class="solvency-card__metric">
+            150.5%
+          </div>
+
+          <div class="solvency-card__label">
+            Reserve Ratio
+          </div>
+
+          <div style="margin-top: var(--spacing-4); padding-top: var(--spacing-4); border-top: 1px solid var(--color-success-200);">
+            <div style="display: flex; justify-content: space-between; margin-bottom: var(--spacing-2);">
+              <span style="font-size: var(--font-size-sm); color: var(--color-neutral-600);">Max LTV:</span>
+              <span style="font-size: var(--font-size-sm); font-weight: var(--font-weight-semibold);">80%</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; margin-bottom: var(--spacing-2);">
+              <span style="font-size: var(--font-size-sm); color: var(--color-neutral-600);">Total Reserves:</span>
+              <span style="font-size: var(--font-size-sm); font-weight: var(--font-weight-semibold); font-family: var(--font-mono);">10.5000 BTC</span>
+            </div>
+            <div style="display: flex; justify-content: space-between;">
+              <span style="font-size: var(--font-size-sm); color: var(--color-neutral-600);">Total Liabilities:</span>
+              <span style="font-size: var(--font-size-sm); font-weight: var(--font-weight-semibold); font-family: var(--font-mono);">7.0000 BTC</span>
+            </div>
+          </div>
+
+          <div class="solvency-card__timestamp">
+            Last verified: 2 minutes ago
+          </div>
+        </div>
+      </div>
+
+      <!-- Additional Status Cards -->
+      <div class="grid-item-4">
+        <div class="address-card address-card--verified">
+          <div class="section-header" style="margin-bottom: var(--spacing-3);">
+            <div style="font-size: var(--font-size-sm); font-weight: var(--font-weight-semibold); color: var(--color-neutral-700); margin-bottom: var(--spacing-2);">Reserve Address #1</div>
+          </div>
+
+          <div class="address-card__display">
+            <div class="address-card__text">
+              tb1qw508d6qejxtdg4y5r3zarvary0c5xw7kxpjzsx
+            </div>
+            <div class="address-card__actions">
+              <button class="address-card__action-btn" title="Copy address">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                </svg>
+              </button>
+              <a href="#" class="address-card__action-btn" title="View on explorer">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                  <polyline points="15 3 21 3 21 9"></polyline>
+                  <line x1="10" y1="14" x2="21" y2="3"></line>
+                </svg>
+              </a>
+            </div>
+          </div>
+
+          <div class="address-card__balance-label">Balance</div>
+          <div class="address-card__balance">5.0000 BTC</div>
+
+          <div style="margin-top: var(--spacing-3);">
+            <div style="font-size: var(--font-size-xs); color: var(--color-neutral-500); margin-bottom: var(--spacing-2);">12 transactions</div>
+            <div class="verification-badge">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M9 12l2 2 4-4"></path>
+                <circle cx="12" cy="12" r="10"></circle>
+              </svg>
+              Verified in Merkle Tree
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid-item-4">
+        <div class="address-card address-card--verified">
+          <div class="section-header" style="margin-bottom: var(--spacing-3);">
+            <div style="font-size: var(--font-size-sm); font-weight: var(--font-weight-semibold); color: var(--color-neutral-700); margin-bottom: var(--spacing-2);">Reserve Address #2</div>
+          </div>
+
+          <div class="address-card__display">
+            <div class="address-card__text">
+              tb1qrp33g0q5b5698ahp5jnf5yzjmgces69hsd8vqy
+            </div>
+            <div class="address-card__actions">
+              <button class="address-card__action-btn" title="Copy address">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                </svg>
+              </button>
+              <a href="#" class="address-card__action-btn" title="View on explorer">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                  <polyline points="15 3 21 3 21 9"></polyline>
+                  <line x1="10" y1="14" x2="21" y2="3"></line>
+                </svg>
+              </a>
+            </div>
+          </div>
+
+          <div class="address-card__balance-label">Balance</div>
+          <div class="address-card__balance">3.5000 BTC</div>
+
+          <div style="margin-top: var(--spacing-3);">
+            <div style="font-size: var(--font-size-xs); color: var(--color-neutral-500); margin-bottom: var(--spacing-2);">8 transactions</div>
+            <div class="verification-badge">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M9 12l2 2 4-4"></path>
+                <circle cx="12" cy="12" r="10"></circle>
+              </svg>
+              Verified in Merkle Tree
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Proof Progress Indicator -->
+      <div class="grid-item-8">
+        <div class="section-header">
+          <h2 class="section-title">Proof Generation</h2>
+          <p class="section-subtitle">Generate and submit zero-knowledge solvency proofs</p>
+        </div>
+
+        <div class="proof-progress">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--spacing-6);">
+            <h3 style="font-size: var(--font-size-lg); font-weight: var(--font-weight-semibold); margin: 0;">Ready to Generate Proof</h3>
+            <button class="btn btn--primary">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polygon points="5 3 19 12 5 21 5 3"></polygon>
+              </svg>
+              Start Generation
+            </button>
+          </div>
+
+          <div class="proof-progress__bar-container">
+            <div class="proof-progress__bar" style="width: 0%"></div>
+          </div>
+
+          <div class="proof-progress__stages">
+            <div class="proof-stage">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="proof-stage__icon">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="7 10 12 15 17 10"></polyline>
+                <line x1="12" y1="15" x2="12" y2="3"></line>
+              </svg>
+              <div class="proof-stage__content">
+                <div class="proof-stage__label">Fetching Bitcoin UTXOs</div>
+                <div class="proof-stage__subtext">Querying blockchain explorers (~3s)</div>
+              </div>
+            </div>
+
+            <div class="proof-stage">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="proof-stage__icon">
+                <polyline points="16 18 22 12 16 6"></polyline>
+                <polyline points="8 6 2 12 8 18"></polyline>
+              </svg>
+              <div class="proof-stage__content">
+                <div class="proof-stage__label">Building Merkle Tree</div>
+                <div class="proof-stage__subtext">Computing Pedersen hash commitments (~2s)</div>
+              </div>
+            </div>
+
+            <div class="proof-stage">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="proof-stage__icon">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+              </svg>
+              <div class="proof-stage__content">
+                <div class="proof-stage__label">Generating ZK Proof</div>
+                <div class="proof-stage__subtext">UltraKeccakHonk on BN254 curve (~25s)</div>
+              </div>
+            </div>
+
+            <div class="proof-stage">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="proof-stage__icon">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="17 8 12 3 7 8"></polyline>
+                <line x1="12" y1="3" x2="12" y2="15"></line>
+              </svg>
+              <div class="proof-stage__content">
+                <div class="proof-stage__label">Submitting to Starknet</div>
+                <div class="proof-stage__subtext">Calling registry contract (~5s)</div>
+              </div>
+            </div>
+
+            <div class="proof-stage">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="proof-stage__icon">
+                <path d="M9 12l2 2 4-4"></path>
+                <circle cx="12" cy="12" r="10"></circle>
+              </svg>
+              <div class="proof-stage__content">
+                <div class="proof-stage__label">Verifying On-Chain</div>
+                <div class="proof-stage__subtext">Garaga verifier processing (~3s)</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Live Proof Feed -->
+      <div class="grid-item-4">
+        <div class="section-header">
+          <h2 class="section-title">Live Proof Feed</h2>
+          <p class="section-subtitle">Recent solvency proofs</p>
+        </div>
+
+        <div class="proof-feed">
+          <div class="proof-feed-item proof-feed-item--new">
+            <div class="proof-feed-item__header">
+              <div class="proof-feed-item__status">
+                <span class="status-dot status-dot--verified"></span>
+                <span style="font-weight: var(--font-weight-medium); font-size: var(--font-size-sm);">Proof Verified</span>
+              </div>
+              <div class="proof-feed-item__timestamp">2 min ago</div>
+            </div>
+
+            <div style="margin-top: var(--spacing-2);">
+              <div style="font-size: var(--font-size-sm); color: var(--color-neutral-600); margin-bottom: var(--spacing-1);">
+                Issuer: <span style="font-family: var(--font-mono);">0x1234...5678</span>
+              </div>
+              <a href="#" class="proof-feed-item__txhash">
+                Tx: 0xabcd...ef01
+              </a>
+              <div style="display: flex; gap: var(--spacing-2); margin-top: var(--spacing-2); font-size: var(--font-size-sm);">
+                <span style="color: var(--color-success-600); font-weight: var(--font-weight-semibold);">Tier A</span>
+                <span style="color: var(--color-neutral-400);">•</span>
+                <span style="color: var(--color-neutral-600);">150.5% ratio</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="proof-feed-item">
+            <div class="proof-feed-item__header">
+              <div class="proof-feed-item__status">
+                <span class="status-dot status-dot--verified"></span>
+                <span style="font-weight: var(--font-weight-medium); font-size: var(--font-size-sm);">Proof Verified</span>
+              </div>
+              <div class="proof-feed-item__timestamp">1 hour ago</div>
+            </div>
+
+            <div style="margin-top: var(--spacing-2);">
+              <div style="font-size: var(--font-size-sm); color: var(--color-neutral-600); margin-bottom: var(--spacing-1);">
+                Issuer: <span style="font-family: var(--font-mono);">0x9876...4321</span>
+              </div>
+              <a href="#" class="proof-feed-item__txhash">
+                Tx: 0x1234...abcd
+              </a>
+              <div style="display: flex; gap: var(--spacing-2); margin-top: var(--spacing-2); font-size: var(--font-size-sm);">
+                <span style="color: var(--color-primary-600); font-weight: var(--font-weight-semibold);">Tier B</span>
+                <span style="color: var(--color-neutral-400);">•</span>
+                <span style="color: var(--color-neutral-600);">125.0% ratio</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="proof-feed-item">
+            <div class="proof-feed-item__header">
+              <div class="proof-feed-item__status">
+                <span class="status-dot status-dot--pending"></span>
+                <span style="font-weight: var(--font-weight-medium); font-size: var(--font-size-sm);">Verifying...</span>
+              </div>
+              <div class="proof-feed-item__timestamp">Just now</div>
+            </div>
+
+            <div style="margin-top: var(--spacing-2);">
+              <div style="font-size: var(--font-size-sm); color: var(--color-neutral-600); margin-bottom: var(--spacing-1);">
+                Issuer: <span style="font-family: var(--font-mono);">0x5555...9999</span>
+              </div>
+              <a href="#" class="proof-feed-item__txhash">
+                Tx: 0xffff...0000
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    // Demo interaction scripts
+    document.querySelectorAll('.address-card__action-btn').forEach(btn => {
+      if (btn.title === 'Copy address') {
+        btn.addEventListener('click', () => {
+          // Simulate copy action
+          const originalHTML = btn.innerHTML;
+          btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4"></path><circle cx="12" cy="12" r="10"></circle></svg>';
+          setTimeout(() => {
+            btn.innerHTML = originalHTML;
+          }, 2000);
+        });
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,571 @@
+{
+  "components": {
+    "SolvencyStatusCard": {
+      "description": "Real-time solvency status display with tier indicators",
+      "variants": {
+        "tier-a": {
+          "borderColor": "success.500",
+          "backgroundColor": "success.50",
+          "iconColor": "success.600",
+          "glowEffect": "glow-success"
+        },
+        "tier-b": {
+          "borderColor": "primary.500",
+          "backgroundColor": "primary.50",
+          "iconColor": "primary.600",
+          "glowEffect": "glow-primary"
+        },
+        "tier-c": {
+          "borderColor": "warning.500",
+          "backgroundColor": "warning.50",
+          "iconColor": "warning.600",
+          "glowEffect": "shadows.glow-bitcoin"
+        },
+        "none": {
+          "borderColor": "neutral.300",
+          "backgroundColor": "neutral.50",
+          "iconColor": "neutral.500",
+          "glowEffect": "none"
+        }
+      },
+      "states": {
+        "default": {
+          "borderWidth": "2px",
+          "padding": "spacing.6",
+          "borderRadius": "borderRadius.xl",
+          "shadow": "shadows.md"
+        },
+        "hover": {
+          "shadow": "shadows.lg",
+          "transform": "translateY(-2px)",
+          "transition": "duration.normal"
+        },
+        "active": {
+          "borderWidth": "3px",
+          "shadow": "shadows.xl"
+        }
+      },
+      "elements": {
+        "header": {
+          "display": "flex",
+          "alignItems": "center",
+          "gap": "spacing.3",
+          "marginBottom": "spacing.4"
+        },
+        "badge": {
+          "fontSize": "fontSize.xs",
+          "fontWeight": "fontWeight.bold",
+          "padding": "spacing.1 spacing.2",
+          "borderRadius": "borderRadius.full",
+          "textTransform": "uppercase",
+          "letterSpacing": "letterSpacing.wider"
+        },
+        "metric": {
+          "fontSize": "fontSize.3xl",
+          "fontWeight": "fontWeight.bold",
+          "fontFamily": "fontFamily.mono",
+          "lineHeight": "lineHeight.tight"
+        },
+        "label": {
+          "fontSize": "fontSize.sm",
+          "color": "text.secondary",
+          "fontWeight": "fontWeight.medium"
+        },
+        "timestamp": {
+          "fontSize": "fontSize.xs",
+          "color": "text.tertiary",
+          "fontFamily": "fontFamily.mono"
+        },
+        "verifiedIcon": {
+          "size": "24px",
+          "animation": "pulse 2s infinite"
+        }
+      },
+      "content": {
+        "tierLabel": {
+          "TierA": "TIER A - Premium",
+          "TierB": "TIER B - Standard",
+          "TierC": "TIER C - Minimum",
+          "None": "Not Verified"
+        },
+        "ltvDisplay": {
+          "TierA": "80% LTV",
+          "TierB": "60% LTV",
+          "TierC": "40% LTV",
+          "None": "0% LTV"
+        },
+        "reserveRatio": {
+          "TierA": "≥150%",
+          "TierB": "≥120%",
+          "TierC": "≥100%",
+          "None": "N/A"
+        }
+      }
+    },
+
+    "ProofProgressIndicator": {
+      "description": "30+ second proof generation progress with stages",
+      "stages": [
+        {
+          "id": "fetching",
+          "label": "Fetching Bitcoin UTXOs",
+          "duration": "3s",
+          "icon": "download",
+          "color": "primary.500"
+        },
+        {
+          "id": "building",
+          "label": "Building Merkle Tree",
+          "duration": "2s",
+          "icon": "tree",
+          "color": "primary.600"
+        },
+        {
+          "id": "proving",
+          "label": "Generating ZK Proof",
+          "duration": "25s",
+          "icon": "shield",
+          "color": "bitcoin.500",
+          "highlight": true
+        },
+        {
+          "id": "submitting",
+          "label": "Submitting to Starknet",
+          "duration": "5s",
+          "icon": "upload",
+          "color": "primary.500"
+        },
+        {
+          "id": "verifying",
+          "label": "Verifying On-Chain",
+          "duration": "3s",
+          "icon": "check",
+          "color": "success.500"
+        }
+      ],
+      "styles": {
+        "container": {
+          "backgroundColor": "backgrounds.primary",
+          "borderRadius": "borderRadius.xl",
+          "padding": "spacing.8",
+          "border": "2px solid",
+          "borderColor": "borders.default"
+        },
+        "progressBar": {
+          "height": "8px",
+          "backgroundColor": "neutral.200",
+          "borderRadius": "borderRadius.full",
+          "overflow": "hidden"
+        },
+        "progressFill": {
+          "height": "100%",
+          "background": "linear-gradient(90deg, primary.500, bitcoin.500, success.500)",
+          "transition": "width duration.normal easing.ease-out",
+          "position": "relative"
+        },
+        "shimmer": {
+          "animation": "shimmer 2s infinite",
+          "backgroundImage": "linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent)"
+        },
+        "stageIndicator": {
+          "display": "flex",
+          "alignItems": "center",
+          "gap": "spacing.3",
+          "padding": "spacing.4",
+          "borderRadius": "borderRadius.lg",
+          "transition": "all duration.normal"
+        },
+        "stageActive": {
+          "backgroundColor": "primary.50",
+          "borderLeft": "4px solid",
+          "borderColor": "primary.500",
+          "transform": "scale(1.02)"
+        },
+        "stageComplete": {
+          "opacity": 0.6,
+          "filter": "grayscale(0.3)"
+        },
+        "stagePending": {
+          "opacity": 0.4
+        }
+      },
+      "animations": {
+        "pulse": {
+          "keyframes": {
+            "0%": { "opacity": 1 },
+            "50%": { "opacity": 0.5 },
+            "100%": { "opacity": 1 }
+          },
+          "duration": "2s",
+          "iterationCount": "infinite"
+        },
+        "shimmer": {
+          "keyframes": {
+            "0%": { "transform": "translateX(-100%)" },
+            "100%": { "transform": "translateX(100%)" }
+          },
+          "duration": "2s",
+          "iterationCount": "infinite"
+        }
+      }
+    },
+
+    "BitcoinAddressManager": {
+      "description": "Interface for managing Bitcoin reserve addresses",
+      "elements": {
+        "addressCard": {
+          "backgroundColor": "backgrounds.secondary",
+          "border": "1px solid",
+          "borderColor": "borders.default",
+          "borderRadius": "borderRadius.lg",
+          "padding": "spacing.4",
+          "fontFamily": "fontFamily.mono",
+          "fontSize": "fontSize.sm"
+        },
+        "addressDisplay": {
+          "display": "flex",
+          "alignItems": "center",
+          "gap": "spacing.2",
+          "overflow": "hidden"
+        },
+        "truncatedAddress": {
+          "overflow": "hidden",
+          "textOverflow": "ellipsis",
+          "whiteSpace": "nowrap"
+        },
+        "copyButton": {
+          "padding": "spacing.2",
+          "borderRadius": "borderRadius.base",
+          "transition": "all duration.fast",
+          "cursor": "pointer"
+        },
+        "copyButtonHover": {
+          "backgroundColor": "neutral.100",
+          "transform": "scale(1.1)"
+        },
+        "balanceDisplay": {
+          "fontSize": "fontSize.lg",
+          "fontWeight": "fontWeight.bold",
+          "color": "bitcoin.600",
+          "fontFamily": "fontFamily.mono"
+        },
+        "verificationBadge": {
+          "display": "inline-flex",
+          "alignItems": "center",
+          "gap": "spacing.1",
+          "padding": "spacing.1 spacing.2",
+          "backgroundColor": "success.100",
+          "color": "success.700",
+          "borderRadius": "borderRadius.full",
+          "fontSize": "fontSize.xs",
+          "fontWeight": "fontWeight.semibold"
+        },
+        "explorerLink": {
+          "color": "text.link",
+          "textDecoration": "none",
+          "display": "inline-flex",
+          "alignItems": "center",
+          "gap": "spacing.1",
+          "fontSize": "fontSize.sm",
+          "transition": "color duration.fast"
+        },
+        "explorerLinkHover": {
+          "color": "text.link-hover",
+          "textDecoration": "underline"
+        }
+      },
+      "states": {
+        "verified": {
+          "borderColor": "success.300",
+          "backgroundColor": "success.50"
+        },
+        "unverified": {
+          "borderColor": "neutral.300",
+          "backgroundColor": "neutral.50"
+        },
+        "error": {
+          "borderColor": "danger.300",
+          "backgroundColor": "danger.50"
+        }
+      }
+    },
+
+    "LiveProofFeed": {
+      "description": "Real-time feed of proof submissions with transaction links",
+      "elements": {
+        "feedContainer": {
+          "maxHeight": "600px",
+          "overflowY": "auto",
+          "padding": "spacing.4",
+          "backgroundColor": "backgrounds.secondary",
+          "borderRadius": "borderRadius.xl"
+        },
+        "feedItem": {
+          "backgroundColor": "backgrounds.primary",
+          "border": "1px solid",
+          "borderColor": "borders.default",
+          "borderRadius": "borderRadius.lg",
+          "padding": "spacing.4",
+          "marginBottom": "spacing.3",
+          "transition": "all duration.normal"
+        },
+        "feedItemNew": {
+          "borderColor": "primary.400",
+          "backgroundColor": "primary.50",
+          "animation": "slideIn duration.normal easing.spring"
+        },
+        "statusIndicator": {
+          "width": "8px",
+          "height": "8px",
+          "borderRadius": "borderRadius.full",
+          "display": "inline-block",
+          "marginRight": "spacing.2"
+        },
+        "txHash": {
+          "fontFamily": "fontFamily.mono",
+          "fontSize": "fontSize.sm",
+          "color": "text.link",
+          "cursor": "pointer"
+        },
+        "timestamp": {
+          "fontSize": "fontSize.xs",
+          "color": "text.tertiary",
+          "fontFamily": "fontFamily.mono"
+        }
+      },
+      "animations": {
+        "slideIn": {
+          "keyframes": {
+            "0%": { "opacity": 0, "transform": "translateY(-20px)" },
+            "100%": { "opacity": 1, "transform": "translateY(0)" }
+          },
+          "duration": "0.3s",
+          "easing": "spring"
+        },
+        "fadeOut": {
+          "keyframes": {
+            "0%": { "opacity": 1 },
+            "100%": { "opacity": 0 }
+          },
+          "duration": "0.2s",
+          "easing": "ease-out"
+        }
+      }
+    },
+
+    "SolvencyChart": {
+      "description": "Data visualization for solvency ratios and collateralization",
+      "chartTypes": {
+        "ratio": {
+          "type": "gauge",
+          "colors": {
+            "0-99": "danger.500",
+            "100-119": "warning.500",
+            "120-149": "primary.500",
+            "150+": "success.500"
+          },
+          "thresholds": [100, 120, 150]
+        },
+        "history": {
+          "type": "line",
+          "lineColor": "primary.500",
+          "areaColor": "primary.100",
+          "gridColor": "neutral.200"
+        },
+        "tier-distribution": {
+          "type": "donut",
+          "colors": {
+            "TierA": "success.500",
+            "TierB": "primary.500",
+            "TierC": "warning.500",
+            "None": "neutral.400"
+          }
+        }
+      },
+      "styles": {
+        "container": {
+          "backgroundColor": "backgrounds.primary",
+          "borderRadius": "borderRadius.xl",
+          "padding": "spacing.6",
+          "border": "1px solid",
+          "borderColor": "borders.default"
+        },
+        "title": {
+          "fontSize": "fontSize.lg",
+          "fontWeight": "fontWeight.semibold",
+          "marginBottom": "spacing.4",
+          "color": "text.primary"
+        },
+        "legend": {
+          "display": "flex",
+          "gap": "spacing.4",
+          "marginTop": "spacing.4",
+          "fontSize": "fontSize.sm"
+        },
+        "legendItem": {
+          "display": "flex",
+          "alignItems": "center",
+          "gap": "spacing.2"
+        },
+        "legendDot": {
+          "width": "12px",
+          "height": "12px",
+          "borderRadius": "borderRadius.full"
+        }
+      }
+    },
+
+    "LendingProtocolDemo": {
+      "description": "Interactive demo of lending protocol with solvency gates",
+      "elements": {
+        "demoCard": {
+          "backgroundColor": "backgrounds.primary",
+          "border": "2px solid",
+          "borderColor": "borders.default",
+          "borderRadius": "borderRadius.2xl",
+          "padding": "spacing.8"
+        },
+        "inputField": {
+          "border": "1px solid",
+          "borderColor": "borders.default",
+          "borderRadius": "borderRadius.md",
+          "padding": "spacing.3 spacing.4",
+          "fontSize": "fontSize.base",
+          "fontFamily": "fontFamily.mono",
+          "transition": "all duration.fast"
+        },
+        "inputFocus": {
+          "borderColor": "borders.focus",
+          "outline": "none",
+          "boxShadow": "0 0 0 3px rgba(14, 165, 233, 0.1)"
+        },
+        "actionButton": {
+          "padding": "spacing.3 spacing.6",
+          "borderRadius": "borderRadius.lg",
+          "fontSize": "fontSize.base",
+          "fontWeight": "fontWeight.semibold",
+          "transition": "all duration.normal",
+          "cursor": "pointer"
+        },
+        "primaryButton": {
+          "backgroundColor": "primary.600",
+          "color": "text.inverse",
+          "border": "none"
+        },
+        "primaryButtonHover": {
+          "backgroundColor": "primary.700",
+          "transform": "translateY(-1px)",
+          "boxShadow": "shadows.md"
+        },
+        "primaryButtonDisabled": {
+          "backgroundColor": "neutral.300",
+          "cursor": "not-allowed",
+          "opacity": 0.6
+        },
+        "ltvIndicator": {
+          "display": "flex",
+          "alignItems": "center",
+          "gap": "spacing.2",
+          "padding": "spacing.3 spacing.4",
+          "backgroundColor": "primary.50",
+          "borderRadius": "borderRadius.lg",
+          "border": "1px solid",
+          "borderColor": "primary.200"
+        },
+        "warningBox": {
+          "backgroundColor": "warning.50",
+          "border": "1px solid",
+          "borderColor": "warning.300",
+          "borderRadius": "borderRadius.lg",
+          "padding": "spacing.4",
+          "marginTop": "spacing.4"
+        }
+      }
+    },
+
+    "TrustBadge": {
+      "description": "Trust signals and verification indicators",
+      "variants": {
+        "verified": {
+          "icon": "shield-check",
+          "color": "success.600",
+          "backgroundColor": "success.50",
+          "borderColor": "success.300",
+          "label": "Verified On-Chain"
+        },
+        "proof-valid": {
+          "icon": "check-circle",
+          "color": "primary.600",
+          "backgroundColor": "primary.50",
+          "borderColor": "primary.300",
+          "label": "Proof Valid"
+        },
+        "real-time": {
+          "icon": "activity",
+          "color": "bitcoin.600",
+          "backgroundColor": "bitcoin.50",
+          "borderColor": "bitcoin.300",
+          "label": "Live Data",
+          "pulse": true
+        },
+        "stale": {
+          "icon": "alert-triangle",
+          "color": "warning.600",
+          "backgroundColor": "warning.50",
+          "borderColor": "warning.300",
+          "label": "Stale Proof"
+        }
+      },
+      "styles": {
+        "badge": {
+          "display": "inline-flex",
+          "alignItems": "center",
+          "gap": "spacing.2",
+          "padding": "spacing.2 spacing.3",
+          "borderRadius": "borderRadius.full",
+          "fontSize": "fontSize.xs",
+          "fontWeight": "fontWeight.semibold",
+          "border": "1px solid"
+        },
+        "icon": {
+          "size": "14px"
+        },
+        "pulse": {
+          "animation": "pulse 2s infinite"
+        }
+      }
+    },
+
+    "MetricDisplay": {
+      "description": "Large metric displays for key values",
+      "styles": {
+        "container": {
+          "textAlign": "center",
+          "padding": "spacing.6"
+        },
+        "value": {
+          "fontSize": "fontSize.4xl",
+          "fontWeight": "fontWeight.bold",
+          "fontFamily": "fontFamily.mono",
+          "lineHeight": "lineHeight.tight",
+          "background": "linear-gradient(135deg, primary.600, bitcoin.500)",
+          "backgroundClip": "text",
+          "WebkitBackgroundClip": "text",
+          "WebkitTextFillColor": "transparent"
+        },
+        "label": {
+          "fontSize": "fontSize.sm",
+          "color": "text.secondary",
+          "textTransform": "uppercase",
+          "letterSpacing": "letterSpacing.wide",
+          "marginTop": "spacing.2"
+        },
+        "subtext": {
+          "fontSize": "fontSize.xs",
+          "color": "text.tertiary",
+          "marginTop": "spacing.1"
+        }
+      }
+    }
+  }
+}

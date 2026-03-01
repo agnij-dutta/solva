@@ -86,6 +86,18 @@ python3 scripts/submit_proof.py \ # Submit proof on-chain
 cd contracts/solvency_registry && snforge test
 ```
 
+### Web Dashboard (Optional)
+
+For a web-based interface with REST API and real-time proof tracking:
+
+```bash
+cd web-dashboard
+npm install
+npm run dev  # Starts at http://localhost:3000
+```
+
+See [web-dashboard/README.md](web-dashboard/README.md) for API documentation.
+
 ## Project Structure
 
 ```
@@ -106,6 +118,10 @@ solva/
 │   ├── deploy.sh           # Deploy all contracts
 │   ├── submit_proof.py     # Generate calldata & submit
 │   └── demo.sh             # Full demo flow
+├── web-dashboard/          # Next.js web dashboard & API
+│   ├── src/app/api/        # REST API endpoints
+│   ├── src/lib/            # Starknet.js integration & utilities
+│   └── src/types/          # Shared TypeScript types
 └── tests/                  # Test scripts
 ```
 
