@@ -8,6 +8,9 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
 CIRCUIT_DIR="$PROJECT_ROOT/circuits/solvency_circuit"
 
+# Ensure tools are on PATH
+export PATH="$HOME/.nargo/bin:$HOME/.bb:$PATH"
+
 echo "=== Solva Proof Generation ==="
 echo ""
 
@@ -45,31 +48,27 @@ nargo execute witness
 echo "  Witness: target/witness.gz"
 echo ""
 
-# Step 5: Write verification key + generate proof
+# Step 5: Generate proof with bb (newer unified API)
 echo "[5/5] Generating ZK proof..."
 
-# VK must be written first (prove reads it)
-bb write_vk \
-    -b target/solvency_circuit.json \
-    -o target
-echo "  VK: $CIRCUIT_DIR/target/vk"
-
+# bb v4+ uses unified 'prove' command with -t for target
+# -t evm = UltraKeccakHonk (same proof system, Keccak hash)
+# --write_vk generates VK alongside proof
+# --verify does local verification
 bb prove \
     -b target/solvency_circuit.json \
     -w target/witness.gz \
-    -o target
-echo "  Proof: $CIRCUIT_DIR/target/proof"
+    -o target/proof \
+    -t evm \
+    --write_vk \
+    --verify
 
-# Verify locally
-echo ""
-echo "=== Local Verification ==="
-bb verify -k target/vk -p target/proof && \
-    echo "  Proof verified locally!" || \
-    echo "  Local verification failed!"
+echo "  Proof: $CIRCUIT_DIR/target/proof/proof"
+echo "  VK: $CIRCUIT_DIR/target/proof/vk"
+echo "  Public inputs: $CIRCUIT_DIR/target/proof/public_inputs"
 
 echo ""
 echo "=== Done ==="
-echo "Proof artifact: $CIRCUIT_DIR/target/proof"
-echo "Verification key: $CIRCUIT_DIR/target/vk"
+echo "Proof verified locally!"
 echo ""
-echo "Next: run ./scripts/submit_proof.py to submit on-chain"
+echo "Next: submit on-chain via the frontend or ./scripts/submit_proof.py"

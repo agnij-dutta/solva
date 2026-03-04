@@ -1,0 +1,23 @@
+{
+  "network": "starknet-sepolia",
+  "rpc": "https://api.cartridge.gg/x/starknet/sepolia",
+  "deployer": "0x36f21aff52fb88cc777f0bc9151917c5196d17c8ac1ccb52da5087c35e8c635",
+  "deployed_at": "2026-03-04T15:22:34Z",
+  "contracts": {
+    "solvency_verifier": {
+      "class_hash": "0x268ede814331943d7b4b70cb6f6e694c99fd2cd059e1f8781c078932d29d9b",
+      "address": "0x2c6b72374f18167dbfde84f6334e187ac3c465c1b1487865b14bd4eadc8496",
+      "type": "interim"
+    },
+    "solvency_registry": {
+      "class_hash": "0x1b3b4c3793a83042cb96cf096b4efa78d7872bb14822cb0980072fbd035cd51",
+      "address": "0x7df7e6aa22c77771e4aeec9cbbb3ca3d8a69010460682cabccb7962e625d916",
+      "max_proof_age": 86400
+    },
+    "lending_protocol": {
+      "class_hash": "0x17a0d5808980f515a9c8d3d9f813907a15150dd402ca746a07d1372e99a46a",
+      "address": "0x64288b7d33fd437a1026c440793901216895f7fb98868d62b9bde3894fab5fd",
+      "reserve_manager": "0x36f21aff52fb88cc777f0bc9151917c5196d17c8ac1ccb52da5087c35e8c635"
+    }
+  }
+}
