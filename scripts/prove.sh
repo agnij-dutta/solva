@@ -45,30 +45,31 @@ nargo execute witness
 echo "  Witness: target/witness.gz"
 echo ""
 
-# Step 5: Generate UltraKeccakHonk proof
-echo "[5/5] Generating UltraKeccakHonk proof..."
-bb prove_ultra_keccak_honk \
+# Step 5: Write verification key + generate proof
+echo "[5/5] Generating ZK proof..."
+
+# VK must be written first (prove reads it)
+bb write_vk \
+    -b target/solvency_circuit.json \
+    -o target
+echo "  VK: $CIRCUIT_DIR/target/vk"
+
+bb prove \
     -b target/solvency_circuit.json \
     -w target/witness.gz \
-    -o proof
-echo "  Proof: $CIRCUIT_DIR/proof"
-
-# Also write the verification key
-bb write_vk_ultra_keccak_honk \
-    -b target/solvency_circuit.json \
-    -o vk
-echo "  VK: $CIRCUIT_DIR/vk"
+    -o target
+echo "  Proof: $CIRCUIT_DIR/target/proof"
 
 # Verify locally
 echo ""
 echo "=== Local Verification ==="
-bb verify_ultra_keccak_honk -k vk -p proof && \
+bb verify -k target/vk -p target/proof && \
     echo "  Proof verified locally!" || \
     echo "  Local verification failed!"
 
 echo ""
 echo "=== Done ==="
-echo "Proof artifact: $CIRCUIT_DIR/proof"
-echo "Verification key: $CIRCUIT_DIR/vk"
+echo "Proof artifact: $CIRCUIT_DIR/target/proof"
+echo "Verification key: $CIRCUIT_DIR/target/vk"
 echo ""
 echo "Next: run ./scripts/submit_proof.py to submit on-chain"

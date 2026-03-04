@@ -1,12 +1,12 @@
 use std::hash::pedersen_hash;
 
-global TREE_DEPTH: u32 = 4; // 16 leaves — must match tree-builder
+global TREE_DEPTH: u32 = 4; // 16 leaves - must match tree-builder
 
 /// Compute Merkle root from a leaf, its index, and the sibling hash path.
 /// Uses Pedersen hash (Barretenberg backend) matching the off-chain tree builder.
 fn compute_merkle_root(leaf: Field, index: Field, hash_path: [Field; TREE_DEPTH]) -> Field {
     let mut current = leaf;
-    let index_bits = index.to_le_bits(TREE_DEPTH as u32);
+    let index_bits: [u1; TREE_DEPTH] = index.to_le_bits();
     for i in 0..TREE_DEPTH {
         let (left, right) = if index_bits[i] == 0 {
             (current, hash_path[i])
@@ -48,7 +48,7 @@ fn main(
     // If reserves < liabilities, the difference wraps around the field (~254 bits),
     // which cannot be decomposed into 64 bits, causing the assertion to fail.
     let diff = total_reserves - total_liabilities;
-    let _diff_bits: [u1; 64] = diff.to_le_bits();
+    let _diff_bits: [u1; 64] = diff.to_le_bits::<64>();
 }
 
 #[test]

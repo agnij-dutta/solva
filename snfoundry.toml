@@ -1,7 +1,7 @@
 [sncast.sepolia]
 account = "solva-deployer"
 accounts-file = "~/.starknet_accounts/starknet_open_zeppelin_accounts.json"
-url = "https://starknet-sepolia.public.blastapi.io/rpc/v0_7"
+url = "https://api.cartridge.gg/x/starknet/sepolia"
 
 [sncast.devnet]
 account = "devnet-deployer"

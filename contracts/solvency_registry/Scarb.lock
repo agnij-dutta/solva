@@ -4,10 +4,3 @@ version = 1
 [[package]]
 name = "solvency_registry"
 version = "0.1.0"
-dependencies = [
- "solvency_verifier",
-]
-
-[[package]]
-name = "solvency_verifier"
-version = "0.1.0"

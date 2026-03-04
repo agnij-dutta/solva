@@ -39,8 +39,8 @@ fi
 echo "--- Phase 3: Submit Solvency Proof ---"
 REGISTRY_ADDR=$(python3 -c "import json; print(json.load(open('$DEPLOY_FILE'))['contracts']['solvency_registry'])")
 python3 "$SCRIPT_DIR/submit_proof.py" \
-    --proof "$PROJECT_ROOT/circuits/solvency_circuit/proof" \
-    --vk "$PROJECT_ROOT/circuits/solvency_circuit/vk" \
+    --proof "$PROJECT_ROOT/circuits/solvency_circuit/target/proof" \
+    --vk "$PROJECT_ROOT/circuits/solvency_circuit/target/vk" \
     --registry-address "$REGISTRY_ADDR"
 echo ""
 

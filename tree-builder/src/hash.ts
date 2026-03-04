@@ -43,7 +43,9 @@ export async function pedersenHash(inputs: bigint[]): Promise<bigint> {
 
   const frInputs = inputs.map((v) => new Fr(v));
   const result = await api!.pedersenHash(frInputs, 0);
-  return result.toBigInt();
+  // Fr has no toBigInt() -- convert via buffer
+  const buf = result.toBuffer();
+  return BigInt('0x' + Buffer.from(buf).toString('hex'));
 }
 
 /**

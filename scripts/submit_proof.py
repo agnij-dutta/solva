@@ -27,7 +27,7 @@ def generate_calldata(proof_path: str, vk_path: str) -> list[str]:
         from garaga.starknet.cli import gen_proof_calldata
 
         calldata = gen_proof_calldata(
-            system="ultra_keccak_honk",
+            system="ultra_keccak_zk_honk",
             proof_path=proof_path,
             vk_path=vk_path,
         )
