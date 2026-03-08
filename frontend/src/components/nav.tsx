@@ -12,6 +12,7 @@ const links = [
   { href: "/dashboard", label: "Dashboard" },
   { href: "/prove", label: "Prove" },
   { href: "/explorer", label: "Explorer" },
+  { href: "/integrate", label: "Integrate" },
 ];
 
 export function Nav() {

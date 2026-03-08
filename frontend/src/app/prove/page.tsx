@@ -64,18 +64,18 @@ export default function ProvePage() {
             {[
               {
                 icon: Shield,
-                title: "Private by design",
-                desc: "Your UTXO data never leaves your machine. Only the ZK proof and public inputs go on-chain.",
+                title: "Full tree verification",
+                desc: "The circuit reconstructs the entire Merkle tree from raw data — all addresses verified, not just one leaf.",
               },
               {
                 icon: Lock,
-                title: "Cryptographic truth",
-                desc: "UltraHonk proofs on BN254 with 128-bit security. The Noir circuit enforces reserves ≥ liabilities.",
+                title: "Aggregate balance proof",
+                desc: "Balance sum is computed in-circuit across all addresses. UltraHonk on BN254 with 128-bit security.",
               },
               {
                 icon: ShieldCheck,
-                title: "On-chain finality",
-                desc: "Verified proofs are recorded in the Starknet registry with tier classification. Proofs expire after 24h.",
+                title: "On-chain attestation",
+                desc: "Verified proofs recorded in the Starknet registry with solvency tier classification. 24h expiry.",
               },
             ].map((item) => (
               <div key={item.title} className="cell cell-pad noise">

@@ -223,7 +223,7 @@ export default function Home() {
             transition={{ duration: 0.6, delay: 0.25 }}
             className="text-[13px] text-[var(--text-secondary)] max-w-[400px] mx-auto mb-10 leading-relaxed"
           >
-            Bitcoin custodians prove reserves exceed liabilities using zero-knowledge proofs, verified on Starknet.
+            Bitcoin custodians prove aggregate reserves exceed liabilities with full Merkle tree reconstruction in zero-knowledge, verified on Starknet.
           </motion.p>
 
           {/* CTAs */}
@@ -241,10 +241,10 @@ export default function Home() {
               <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
             </Link>
             <Link
-              href="/explorer"
+              href="/integrate"
               className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[var(--bg-surface)]/80 backdrop-blur text-[var(--text-secondary)] border border-[var(--border-dim)] text-[11px] font-semibold hover:text-[var(--text-primary)] hover:border-[var(--border-subtle)] transition-all"
             >
-              Explore Proofs
+              Integrate
             </Link>
           </motion.div>
         </motion.div>

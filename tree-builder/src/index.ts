@@ -1,5 +1,5 @@
 /**
- * CLI entry point for Solva Merkle tree builder.
+ * CLI entry point for Solva Merkle tree builder (v2 — full tree reconstruction).
  *
  * Usage:
  *   npx tsx src/index.ts [--sample] [--input <path>] [--liabilities <sats>]
@@ -13,7 +13,7 @@
  *   1. Load reserve data (sample or from file)
  *   2. Hash each (address, balance) pair into a leaf via Pedersen
  *   3. Build a depth-4 Merkle tree
- *   4. Extract a proof for leaf index 0
+ *   4. Output ALL leaf data (addr_hashes + balances) for in-circuit verification
  *   5. Write Prover.toml to circuits/solvency_circuit/Prover.toml
  *   6. Save tree debug data to tree-builder/merkle_tree.json
  */
@@ -24,8 +24,8 @@ import { resolve, dirname } from 'path';
 import { fileURLToPath } from 'url';
 
 import { initBarretenberg, pedersenHash, cleanupBarretenberg } from './hash.js';
-import { buildMerkleTree, getMerkleProof } from './buildTree.js';
-import { generateProverToml, toHexField } from './generateProverToml.js';
+import { buildMerkleTree } from './buildTree.js';
+import { generateProverToml, toHexField, type LeafData } from './generateProverToml.js';
 
 // ---------------------------------------------------------------------------
 // Constants
@@ -63,10 +63,7 @@ const SAMPLE_RESERVES: AddressBalance[] = [
 
 /**
  * Derive a BN254-compatible field element from a Bitcoin address string.
- *
- * We SHA-256 the address and take the first 31 bytes (248 bits), which is
- * guaranteed to be smaller than the BN254 scalar field order (~254 bits).
- * This matches the approach used in the Noir circuit.
+ * SHA-256 the address and take the first 31 bytes (248 bits).
  */
 function hashAddress(address: string): bigint {
   const hash = createHash('sha256').update(address).digest();
@@ -74,9 +71,6 @@ function hashAddress(address: string): bigint {
   return BigInt('0x' + truncated.toString('hex'));
 }
 
-/**
- * Parse CLI arguments into a simple key/value map.
- */
 function parseArgs(argv: string[]): Map<string, string> {
   const args = new Map<string, string>();
   for (let i = 2; i < argv.length; i++) {
@@ -92,10 +86,6 @@ function parseArgs(argv: string[]): Map<string, string> {
   return args;
 }
 
-/**
- * Load reserve data from a JSON file produced by the Python UTXO fetcher.
- * Expected shape: { addresses: string[], utxos: { [addr]: [{value}] }, total_sats: number }
- */
 function loadReserveData(filePath: string): AddressBalance[] {
   const raw = readFileSync(filePath, 'utf-8');
   const data = JSON.parse(raw) as {
@@ -121,7 +111,7 @@ async function main(): Promise<void> {
   const args = parseArgs(process.argv);
 
   console.log('='.repeat(60));
-  console.log('  Solva Merkle Tree Builder');
+  console.log('  Solva Tree Builder v2 — Full Tree Reconstruction');
   console.log('='.repeat(60));
   console.log();
 
@@ -161,14 +151,16 @@ async function main(): Promise<void> {
   console.log('  Done.');
   console.log();
 
-  // --- 4. Hash leaves ---
-  console.log('Hashing leaves (Pedersen)...');
+  // --- 4. Hash leaves and collect leaf data ---
+  console.log('Hashing leaves (Pedersen on BN254)...');
   const leaves: bigint[] = [];
+  const leafData: LeafData[] = [];
 
   for (const { address, balance } of reserves) {
     const addrHash = hashAddress(address);
     const leaf = await pedersenHash([addrHash, BigInt(balance)]);
     leaves.push(leaf);
+    leafData.push({ addrHash, balance: BigInt(balance) });
     console.log(`  [${leaves.length - 1}] ${address.slice(0, 20)}... => ${toHexField(leaf).slice(0, 18)}...`);
   }
   console.log();
@@ -177,22 +169,13 @@ async function main(): Promise<void> {
   console.log(`Building Merkle tree (depth=${TREE_DEPTH}, capacity=${2 ** TREE_DEPTH})...`);
   const tree = await buildMerkleTree(leaves, TREE_DEPTH);
   console.log(`  Root: ${toHexField(tree.root)}`);
+  console.log(`  Active leaves: ${reserves.length} / ${2 ** TREE_DEPTH}`);
   console.log();
 
-  // --- 6. Extract proof for leaf 0 ---
-  const proofIndex = 0;
-  console.log(`Extracting Merkle proof for leaf index ${proofIndex}...`);
-  const proof = getMerkleProof(tree, proofIndex);
-  console.log(`  Leaf : ${toHexField(proof.leaf).slice(0, 18)}...`);
-  console.log(`  Index: ${proof.index}`);
-  console.log(`  Path : [${proof.hashPath.map((h) => toHexField(h).slice(0, 18) + '...').join(', ')}]`);
-  console.log();
-
-  // --- 7. Generate Prover.toml ---
+  // --- 6. Generate Prover.toml (v2 format — all leaves) ---
   const tomlContent = generateProverToml(
     tree,
-    proof,
-    BigInt(totalReserves),
+    leafData,
     BigInt(totalLiabilities),
   );
 
@@ -201,23 +184,23 @@ async function main(): Promise<void> {
   writeFileSync(proverTomlPath, tomlContent, 'utf-8');
   console.log(`Prover.toml written to ${proverTomlPath}`);
 
-  // --- 8. Save debug tree data ---
+  // --- 7. Save debug tree data ---
   const treeDebug = {
     depth: tree.depth,
-    numLeaves: tree.leaves.length,
+    num_leaves: tree.leaves.length,
     root: toHexField(tree.root),
     layers: tree.layers.map((layer) => layer.map((v) => toHexField(v))),
-    proof: {
-      leaf: toHexField(proof.leaf),
-      index: proof.index,
-      hashPath: proof.hashPath.map((h) => toHexField(h)),
-    },
-    reserves: reserves.map((r) => ({
+    reserves: reserves.map((r, i) => ({
       address: r.address,
       balance: r.balance,
+      addr_hash: toHexField(leafData[i].addrHash),
     })),
-    totalReserves,
-    totalLiabilities,
+    total_reserves: totalReserves,
+    total_liabilities: totalLiabilities,
+    is_solvent: totalReserves >= totalLiabilities,
+    ratio: totalLiabilities > 0 ? ((totalReserves / totalLiabilities) * 100).toFixed(1) + '%' : 'N/A',
+    num_addresses: reserves.length,
+    circuit_version: 'v2-full-tree-reconstruction',
   };
 
   const treeJsonPath = resolve(PROJECT_ROOT, 'tree-builder', 'merkle_tree.json');
@@ -225,22 +208,22 @@ async function main(): Promise<void> {
   console.log(`Tree data written to ${treeJsonPath}`);
   console.log();
 
-  // --- 9. Cleanup ---
+  // --- 8. Cleanup ---
   await cleanupBarretenberg();
 
-  // --- 10. Summary ---
+  // --- 9. Summary ---
   console.log('='.repeat(60));
   console.log('  Summary');
   console.log('='.repeat(60));
+  console.log(`  Circuit version  : v2 (full tree reconstruction)`);
   console.log(`  Merkle root      : ${toHexField(tree.root)}`);
   console.log(`  Tree depth       : ${tree.depth}`);
-  console.log(`  Leaves (actual)  : ${tree.leaves.length}`);
-  console.log(`  Leaves (padded)  : ${2 ** tree.depth}`);
+  console.log(`  Active addresses : ${reserves.length}`);
   console.log(`  Total reserves   : ${totalReserves.toLocaleString()} sats`);
   console.log(`  Total liabilities: ${totalLiabilities.toLocaleString()} sats`);
-  console.log(`  Proof leaf index : ${proofIndex}`);
+  console.log(`  Solvency ratio   : ${((totalReserves / totalLiabilities) * 100).toFixed(1)}%`);
   console.log();
-  console.log('Next step: cd circuits/solvency_circuit && nargo prove');
+  console.log('Next: cd circuits/solvency_circuit && nargo compile && nargo execute witness');
   console.log();
 }
 

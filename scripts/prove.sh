@@ -51,17 +51,25 @@ echo ""
 # Step 5: Generate proof with bb (newer unified API)
 echo "[5/5] Generating ZK proof..."
 
+# Clean old proof artifacts to avoid VK mismatch after circuit changes
+rm -rf target/proof
+
 # bb v4+ uses unified 'prove' command with -t for target
 # -t evm = UltraKeccakHonk (same proof system, Keccak hash)
 # --write_vk generates VK alongside proof
-# --verify does local verification
 bb prove \
     -b target/solvency_circuit.json \
     -w target/witness.gz \
     -o target/proof \
     -t evm \
-    --write_vk \
-    --verify
+    --write_vk
+
+# Verify locally
+bb verify \
+    -p target/proof/proof \
+    -k target/proof/vk \
+    -i target/proof/public_inputs \
+    -t evm
 
 echo "  Proof: $CIRCUIT_DIR/target/proof/proof"
 echo "  VK: $CIRCUIT_DIR/target/proof/vk"
