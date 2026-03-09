@@ -43,9 +43,16 @@ function getLendingContract() {
 // ─── Map tier enum ───────────────────────────────────────
 function parseTier(tierVariant: any): SolvencyTier {
   if (typeof tierVariant === "object" && tierVariant !== null) {
-    if (tierVariant.variant) return tierVariant.variant as SolvencyTier;
+    // Format: { variant: { TierA: {} } }
+    if (tierVariant.variant && typeof tierVariant.variant === "object") {
+      for (const key of ["TierA", "TierB", "TierC", "None"]) {
+        if (key in tierVariant.variant) return key as SolvencyTier;
+      }
+    }
+    // Format: string variant name
+    if (typeof tierVariant.variant === "string") return tierVariant.variant as SolvencyTier;
     if (tierVariant.activeVariant) return tierVariant.activeVariant() as SolvencyTier;
-    // starknet.js may return { None: {}, TierA: {} } etc
+    // Format: { TierA: {} } directly
     for (const key of ["TierA", "TierB", "TierC", "None"]) {
       if (key in tierVariant) return key as SolvencyTier;
     }
@@ -70,17 +77,42 @@ export function useSolvencyInfo(issuerAddress: string | undefined) {
     try {
       const contract = getRegistryContract();
       const result = await contract.get_solvency_info(issuerAddress);
-      setData({
-        lastProofTime: Number(result.last_proof_time ?? result[0] ?? 0),
-        merkleRoot: "0x" + (BigInt(result.merkle_root?.low ?? result[1]?.low ?? 0) +
-          (BigInt(result.merkle_root?.high ?? result[1]?.high ?? 0) << 128n)).toString(16),
-        totalLiabilities: BigInt(result.total_liabilities?.low ?? result[2]?.low ?? 0) +
-          (BigInt(result.total_liabilities?.high ?? result[2]?.high ?? 0) << 128n),
-        isValid: Boolean(
-          result.is_valid === true || result.is_valid?.True !== undefined || result[3] === true
-        ),
-        tier: parseTier(result.tier ?? result[4]),
-      });
+
+      // starknet.js may return a named struct OR a flat felt252 array depending on version/ABI parsing.
+      // Handle both formats.
+      let lastProofTime: number;
+      let merkleRoot: string;
+      let totalLiabilities: bigint;
+      let isValid: boolean;
+      let tier: SolvencyTier;
+
+      if (result.last_proof_time !== undefined) {
+        // Named struct format from starknet.js Contract with ABI
+        // merkle_root and total_liabilities are already assembled BigInts (not {low,high})
+        lastProofTime = Number(result.last_proof_time);
+        const rootVal = BigInt(result.merkle_root ?? 0);
+        merkleRoot = "0x" + rootVal.toString(16);
+        totalLiabilities = BigInt(result.total_liabilities ?? 0);
+        isValid = Boolean(result.is_valid);
+        tier = parseTier(result.tier);
+      } else {
+        // Flat array fallback
+        const r = Array.isArray(result) ? result : Object.values(result);
+        lastProofTime = Number(BigInt(r[0] ?? 0));
+        const rootLow = BigInt(r[1] ?? 0);
+        const rootHigh = BigInt(r[2] ?? 0);
+        merkleRoot = "0x" + (rootLow + (rootHigh << 128n)).toString(16);
+        const liabLow = BigInt(r[3] ?? 0);
+        const liabHigh = BigInt(r[4] ?? 0);
+        totalLiabilities = liabLow + (liabHigh << 128n);
+        const validVal = Number(BigInt(r[5] ?? 0));
+        isValid = validVal === 1;
+        const tierIndex = Number(BigInt(r[6] ?? 0));
+        const tierMap: SolvencyTier[] = ["None", "TierC", "TierB", "TierA"];
+        tier = tierMap[tierIndex] ?? "None";
+      }
+
+      setData({ lastProofTime, merkleRoot, totalLiabilities, isValid, tier });
     } catch (e: any) {
       setError(e.message || "Failed to query solvency info");
     } finally {
@@ -194,6 +226,35 @@ export function useLendingState() {
   }, []);
 
   return { maxLtv, poolBalance, loading };
+}
+
+// ─── Hook: User lending position ─────────────────────────
+export function useUserLendingPosition(userAddress: string | undefined) {
+  const [deposit, setDeposit] = useState<bigint>(0n);
+  const [borrow, setBorrow] = useState<bigint>(0n);
+  const [loading, setLoading] = useState(false);
+
+  const refetch = useCallback(async () => {
+    if (!userAddress) return;
+    setLoading(true);
+    try {
+      const contract = getLendingContract();
+      const [dep, borr] = await Promise.all([
+        contract.get_user_deposit(userAddress).catch(() => null),
+        contract.get_user_borrow(userAddress).catch(() => null),
+      ]);
+      if (dep) setDeposit(BigInt(dep.low ?? dep ?? 0) + (BigInt(dep.high ?? 0) << 128n));
+      if (borr) setBorrow(BigInt(borr.low ?? borr ?? 0) + (BigInt(borr.high ?? 0) << 128n));
+    } catch {
+      // ignore
+    } finally {
+      setLoading(false);
+    }
+  }, [userAddress]);
+
+  useEffect(() => { refetch(); }, [refetch]);
+
+  return { deposit, borrow, loading, refetch };
 }
 
 // ─── Hook: Registry config ───────────────────────────────

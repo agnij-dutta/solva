@@ -6,7 +6,7 @@ export const CONTRACTS = {
     address: process.env.NEXT_PUBLIC_REGISTRY_ADDRESS || "0x7df7e6aa22c77771e4aeec9cbbb3ca3d8a69010460682cabccb7962e625d916",
   },
   lending: {
-    address: process.env.NEXT_PUBLIC_LENDING_ADDRESS || "0x64288b7d33fd437a1026c440793901216895f7fb98868d62b9bde3894fab5fd",
+    address: process.env.NEXT_PUBLIC_LENDING_ADDRESS || "0x1036897ac87d129ab45d4ae51a7c2a135180f62b6ee166ca086ad1d4162d8cf",
   },
 } as const;
 

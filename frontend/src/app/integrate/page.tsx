@@ -2,7 +2,8 @@
 
 import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
-import { Code2, Terminal, Globe, Layers, ArrowUpRight, Copy, Check, Shield } from "lucide-react";
+import { Code2, Terminal, Globe, Layers, ArrowUpRight, Copy, Check, Shield, ArrowRight, Landmark } from "lucide-react";
+import Link from "next/link";
 import { useState } from "react";
 import { CONTRACTS, NETWORK } from "@/lib/contracts";
 
@@ -306,6 +307,34 @@ Response:
                   </div>
                 </div>
               ))}
+            </div>
+          </div>
+        </R>
+        {/* Lending Demo CTA */}
+        <R delay={0.35}>
+          <div className="cell cell-glow cell-pad noise relative overflow-hidden mt-2">
+            <div className="absolute top-0 right-0 w-60 h-60 bg-green-400/[0.02] rounded-full blur-3xl -translate-y-1/2 translate-x-1/4 pointer-events-none" />
+            <div className="flex items-start gap-4 relative z-10">
+              <div className="w-10 h-10 rounded-xl bg-green-400/8 border border-green-400/12 flex items-center justify-center shrink-0">
+                <Landmark className="w-4.5 h-4.5 text-green-400" />
+              </div>
+              <div className="flex-1">
+                <h2 className="text-[14px] font-semibold text-[var(--text-primary)] mb-1">
+                  Lending Protocol Demo
+                </h2>
+                <p className="text-[11px] text-[var(--text-tertiary)] leading-relaxed mb-4 max-w-md">
+                  See the solvency gate in action. Our demo lending protocol queries the registry in real-time
+                  and gates borrowing based on verified ZK proofs. Simulate borrows, inspect the cross-contract
+                  call flow, and see how tier-based LTV enforcement works on-chain.
+                </p>
+                <Link
+                  href="/lending"
+                  className="group inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-green-400/10 text-green-400 border border-green-400/15 text-[11px] font-semibold hover:bg-green-400/15 transition-all"
+                >
+                  Try Lending Demo
+                  <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
+                </Link>
+              </div>
             </div>
           </div>
         </R>

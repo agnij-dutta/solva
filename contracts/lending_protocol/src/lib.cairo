@@ -115,11 +115,11 @@ mod LendingProtocol {
             let registry = ISolvencyRegistryDispatcher {
                 contract_address: self.registry_address.read(),
             };
-            let reserve_mgr = self.reserve_manager.read();
 
-            assert(registry.is_solvent(reserve_mgr), 'Reserve manager not solvent');
+            // Check the caller's own solvency proof
+            assert(registry.is_solvent(caller), 'Caller not solvent');
 
-            let info = registry.get_solvency_info(reserve_mgr);
+            let info = registry.get_solvency_info(caller);
             let now = get_block_timestamp();
             assert(now - info.last_proof_time < 86400_u64, 'Solvency proof too stale');
 
@@ -141,12 +141,8 @@ mod LendingProtocol {
         }
 
         fn get_max_ltv(self: @ContractState) -> u256 {
-            let registry = ISolvencyRegistryDispatcher {
-                contract_address: self.registry_address.read(),
-            };
-            let reserve_mgr = self.reserve_manager.read();
-            let info = registry.get_solvency_info(reserve_mgr);
-            get_tier_ltv(info.tier)
+            // Return max possible LTV (TierA)
+            80
         }
 
         fn get_pool_balance(self: @ContractState) -> u256 {

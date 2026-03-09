@@ -139,9 +139,31 @@ export const LENDING_ABI = [
     ],
   },
   {
+    type: "enum",
+    name: "core::bool",
+    variants: [
+      { name: "False", type: "()" },
+      { name: "True", type: "()" },
+    ],
+  },
+  {
     type: "interface",
     name: "lending_protocol::ILendingProtocol",
     items: [
+      {
+        type: "function",
+        name: "deposit",
+        inputs: [{ name: "amount", type: "core::integer::u256" }],
+        outputs: [],
+        state_mutability: "external",
+      },
+      {
+        type: "function",
+        name: "borrow",
+        inputs: [{ name: "amount", type: "core::integer::u256" }],
+        outputs: [],
+        state_mutability: "external",
+      },
       {
         type: "function",
         name: "get_max_ltv",
@@ -170,6 +192,34 @@ export const LENDING_ABI = [
         outputs: [{ type: "core::integer::u256" }],
         state_mutability: "view",
       },
+    ],
+  },
+  {
+    type: "event",
+    name: "lending_protocol::LendingProtocol::Deposit",
+    kind: "struct",
+    members: [
+      { name: "user", type: "core::starknet::contract_address::ContractAddress", kind: "key" },
+      { name: "amount", type: "core::integer::u256", kind: "data" },
+    ],
+  },
+  {
+    type: "event",
+    name: "lending_protocol::LendingProtocol::Borrow",
+    kind: "struct",
+    members: [
+      { name: "user", type: "core::starknet::contract_address::ContractAddress", kind: "key" },
+      { name: "amount", type: "core::integer::u256", kind: "data" },
+      { name: "ltv", type: "core::integer::u256", kind: "data" },
+    ],
+  },
+  {
+    type: "event",
+    name: "lending_protocol::LendingProtocol::Event",
+    kind: "enum",
+    variants: [
+      { name: "Deposit", type: "lending_protocol::LendingProtocol::Deposit", kind: "nested" },
+      { name: "Borrow", type: "lending_protocol::LendingProtocol::Borrow", kind: "nested" },
     ],
   },
 ] as const;

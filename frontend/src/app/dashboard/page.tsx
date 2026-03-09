@@ -101,11 +101,15 @@ function ContractRow({ name, address, icon: Icon, accent }: {
 }
 
 import { DEPLOYER_ADDRESS } from "@/lib/contracts";
+import { useAccount } from "@starknet-react/core";
 
 /* ═══════════════════════════════════════════════════════════ */
 export default function DashboardPage() {
+  const { address } = useAccount();
   const { proofs: liveProofs, loading: proofsLoading, error: proofsError, refetch: refetchProofs } = useRecentProofs(20);
-  const { data: deployerInfo, loading: infoLoading, refetch: refetchInfo } = useSolvencyInfo(DEPLOYER_ADDRESS);
+  // Query connected wallet first, fall back to deployer
+  const queryAddress = address || DEPLOYER_ADDRESS;
+  const { data: deployerInfo, loading: infoLoading, refetch: refetchInfo } = useSolvencyInfo(queryAddress);
   const { verifierAddress, maxProofAge, loading: configLoading } = useRegistryConfig();
   const { maxLtv, poolBalance, loading: lendingLoading } = useLendingState();
 
